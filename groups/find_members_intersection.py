@@ -4,20 +4,16 @@ import vk
 
 from get_members import get_members
 
-token = "TOKEN"
-version = "VERSION"
+def find_intersection(api, *group_ids):
+	members = [get_members(api, group_id) for group_id in group_ids]
+	return set.intersection(*members)
 
-session = vk.Session(access_token=token)
-api = vk.API(session, v=version)
+if __name__ == "__main__":
+	token = "TOKEN"
+	version = "VERSION"
 
-first_group = [int(e) for e in input("Please, enter first group of ids: ").replace(" ", "").split(",")]
-second_group = [int(e) for e in input("Please, enter second group of ids: ").replace(" ", "").split(",")]
-result = set()
+	session = vk.Session(access_token=token)
+	api = vk.API(session, v=version)
 
-first_members = [get_members(api, e) for e in first_group]
-second_members = [get_members(api, e) for e in second_group]
-
-for lhs in first_members:
-	for rhs in second_members:
-		result.update(lhs.intersection(rhs))
-print(result)
+	group_ids = [int(e.strip()) for e in sys.stdin.readlines()]
+	print(api, *group_ids)
